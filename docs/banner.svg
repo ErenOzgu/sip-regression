@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="t d">
+  <title id="t">sip-regression</title>
+  <desc id="d">SIPp scenarios and a Python runner that put a real Asterisk through 22 checks: registration, calls, audio, hostile packets, load. Ten deliberately broken PBXes must fail them.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1117"/>
+      <stop offset="1" stop-color="#1b2230"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#58a6ff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#58a6ff" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="420" fill="url(#bg)"/>
+  <rect width="1280" height="420" fill="url(#grid)"/>
+  <rect width="640" height="420" fill="url(#glow)"/>
+  <g transform="translate(0 0)">
+  <g font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <text x="64" y="128" font-size="13" letter-spacing="3" fill="#58a6ff" font-weight="600">REGRESSION SUITE  ·  SIPp  ·  ASTERISK</text>
+    <text x="62" y="196" font-size="58" font-weight="700" fill="#f0f6fc">sip-regression</text>
+    <text x="64" y="244" font-size="22" fill="#9aa7b8">A real Asterisk, a real SIP client, 22 checks,</text>
+    <text x="64" y="274" font-size="22" fill="#9aa7b8">and ten broken PBXes that must fail them.</text>
+    <g font-size="14" font-weight="600" fill="#d0d7de">
+      <rect x="64" y="304" width="109" height="34" rx="17" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.14"/><text x="118" y="326" text-anchor="middle">22 checks</text>
+      <rect x="185" y="304" width="176" height="34" rx="17" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.14"/><text x="273" y="326" text-anchor="middle">10 mutants caught</text>
+      <rect x="373" y="304" width="134" height="34" rx="17" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.14"/><text x="440" y="326" text-anchor="middle">JUnit report</text>
+    </g>
+  </g>
+  <g transform="translate(700 56)">
+    <rect width="516" height="308" rx="12" fill="#0b0f14" stroke="#ffffff" stroke-opacity="0.12"/>
+    <rect width="516" height="38" rx="12" fill="#ffffff" fill-opacity="0.05"/>
+    <circle cx="22" cy="19" r="6" fill="#f85149" fill-opacity="0.85"/>
+    <circle cx="42" cy="19" r="6" fill="#d29922" fill-opacity="0.85"/>
+    <circle cx="62" cy="19" r="6" fill="#3fb950" fill-opacity="0.85"/>
+    <text x="258" y="24" text-anchor="middle" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12" fill="#8b949e">python3 -m sipreg</text>
+    <g font-family="SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace" font-size="13" fill="#8b949e">
+      <text x="22" y="76" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">register_with_password</tspan><tspan x="420" fill="#8b949e">0.2s</tspan></text>
+      <text x="22" y="102" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">invite_without_credentials</tspan><tspan x="420" fill="#8b949e">3.2s</tspan></text>
+      <text x="22" y="128" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">call_phone_to_phone</tspan><tspan x="420" fill="#8b949e">4.3s</tspan></text>
+      <text x="22" y="154" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">call_cancelled_while_ringing</tspan><tspan x="420" fill="#8b949e">0.7s</tspan></text>
+      <text x="22" y="180" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">media_ignores_strangers</tspan><tspan x="420" fill="#8b949e">2.6s</tspan></text>
+      <text x="22" y="206" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">survives_malformed_packets</tspan><tspan x="420" fill="#8b949e">5.8s</tspan></text>
+      <text x="22" y="232" xml:space="preserve"><tspan fill="#3fb950">ok  </tspan><tspan x="58" fill="#e6edf3">load_calls</tspan><tspan x="420" fill="#8b949e">9.5s</tspan></text>
+      <text x="22" y="258" xml:space="preserve"><tspan fill="#e6edf3"></tspan></text>
+      <text x="22" y="284" xml:space="preserve"><tspan fill="#3fb950">22 passed</tspan><tspan fill="#e6edf3">, 0 failed</tspan><tspan fill="#8b949e"> in 46 s</tspan><tspan fill="#8b949e">  (Asterisk 20.6, SIPp 3.7)</tspan></text>
+    </g>
+  </g>
+  </g>
+</svg>

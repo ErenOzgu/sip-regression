@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- A phone registers with the right password: challenge first, then 200 OK.
+     The registration is left in place (30 s) so the runner can look at it. -->
+<scenario name="REGISTER with the right password">
+  <send retrans="500">
+    <![CDATA[
+      REGISTER sip:[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[user]@[remote_ip]>;tag=[call_number]
+      To: <sip:[user]@[remote_ip]>
+      Call-ID: [call_id]
+      CSeq: 1 REGISTER
+      Contact: <sip:[user]@[local_ip]:[contact_port]>
+      Max-Forwards: 70
+      Expires: 30
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <recv response="401" auth="true"/>
+
+  <send retrans="500">
+    <![CDATA[
+      REGISTER sip:[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[user]@[remote_ip]>;tag=[call_number]
+      To: <sip:[user]@[remote_ip]>
+      Call-ID: [call_id]
+      CSeq: 2 REGISTER
+      Contact: <sip:[user]@[local_ip]:[contact_port]>
+      Max-Forwards: 70
+      Expires: 30
+      [authentication]
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <recv response="200"/>
+</scenario>

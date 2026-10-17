@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- A BYE for a call that does not exist must be answered with 481, not ignored and
+     not allowed to end somebody else's call. -->
+<scenario name="BYE for an unknown dialog">
+  <send retrans="500">
+    <![CDATA[
+      BYE sip:[service]@[remote_ip]:[remote_port] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: <sip:[user]@[remote_ip]>;tag=[call_number]
+      To: <sip:[service]@[remote_ip]>;tag=no-such-dialog
+      Call-ID: [call_id]
+      CSeq: 7 BYE
+      Max-Forwards: 70
+      Content-Length: 0
+    ]]>
+  </send>
+
+  <recv response="481" optional="true" next="done"/>
+  <recv response="401"/>
+
+  <label id="done"/>
+</scenario>

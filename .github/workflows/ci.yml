@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Lint and unit tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: ruff
+        run: |
+          pip install --quiet ruff
+          ruff check .
+      - name: Unit tests (no Asterisk needed)
+        run: python -m unittest discover -s tests -t . -v
+
+  regression:
+    name: Regression suite on Asterisk (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Asterisk and SIPp
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq asterisk sip-tester python3
+          # the packaged service starts on its own; the suite runs its own throw-away instance
+          sudo systemctl stop asterisk || true
+          asterisk -V
+          sipp -v | head -1
+      - name: Run the suite
+        run: |
+          mkdir -p results
+          hack/annotate.sh python3 -m sipreg --junit results/junit.xml --artifacts results/traces
+      - name: Keep the traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.os }}
+          path: results/
+          if-no-files-found: ignore
+
+  mutants:
+    name: The suite can fail (mutation check)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Asterisk and SIPp
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq asterisk sip-tester python3
+          sudo systemctl stop asterisk || true
+      - name: Break the PBX ten ways, each must be caught
+        run: hack/annotate.sh python3 hack/mutants.py
