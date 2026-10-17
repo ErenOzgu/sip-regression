@@ -138,7 +138,7 @@ These came from running against real Asterisk 18 and 20, not from the documentat
 - **Strict RTP is what keeps outsiders out of a call.** With it off, Asterisk answered every one of 110 injected packets, to the outsider's own address. With it on, none.
 - **A cancelled call needs the INVITE's branch.** SIPp's `[branch]` is a per-message counter, so a CANCEL built the obvious way gets `481 Call/Transaction Does Not Exist`. An ACK for an error answer with the wrong branch is quietly tolerated, which is worse: the test passes while the scenario is wrong. [`sipreg/trace.py`](sipreg/trace.py) reads SIPp's message trace after every run and fails on that, and a unit test recomputes every `[branch-N]` offset from the XML.
 - **A SIPp phone cannot both register and receive the call.** An INVITE has a new Call-ID, so SIPp treats it as an unknown call and answers 603. The phone is two processes: one registers, one waits at the registered port.
-- **A stock Asterisk logs 126 warnings and errors while booting** (missing optional `.conf` files). The log check starts when Asterisk says it is ready.
+- **A stock Asterisk logs over a hundred warnings and errors while booting** (126 on Asterisk 20.6: missing optional `.conf` files). The log check starts when Asterisk says it is ready.
 - **Hostile input makes the SIP stack write WARNING and ERROR lines.** Those are tolerated after `survives_malformed_packets` and only from `pjproject`; from anywhere else, or before that check, they fail `health_after_everything`.
 
 ## Layout
