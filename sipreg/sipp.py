@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import os
 import re
 import shutil
 import subprocess
@@ -62,6 +63,25 @@ def _int(row: dict[str, str], key: str) -> int:
         return int(float(row.get(key, "0") or 0))
     except ValueError:
         return 0
+
+
+CAP_NET_RAW = 13
+RAW_HINT = "run as root, or give SIPp the capability: sudo setcap cap_net_raw+ep \"$(readlink -f \"$(which sipp)\")\""
+
+
+def can_play_pcap(binary: str = "sipp") -> bool:
+    """SIPp sends the audio of play_pcap_audio through a raw socket, which needs root or CAP_NET_RAW."""
+    if os.geteuid() == 0:
+        return True
+    path = shutil.which(binary)
+    if path is None:
+        return False
+    try:
+        data = os.getxattr(os.path.realpath(path), "security.capability")
+    except OSError:
+        return False
+    # struct vfs_cap_data: magic_etc, then the permitted and inheritable words of capabilities 0-31
+    return len(data) >= 8 and bool(int.from_bytes(data[4:8], "little") >> CAP_NET_RAW & 1)
 
 
 class Running:

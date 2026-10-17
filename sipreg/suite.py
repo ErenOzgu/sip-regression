@@ -23,14 +23,15 @@ class Case:
     title: str
     group: str
     fn: Callable[[Context], None]
+    needs_raw: bool = False  # plays audio with SIPp, which needs root or CAP_NET_RAW
 
 
 CASES: list[Case] = []
 
 
-def case(name: str, title: str, group: str = "signalling"):
+def case(name: str, title: str, group: str = "signalling", needs_raw: bool = False):
     def deco(fn):
-        CASES.append(Case(name, title, group, fn))
+        CASES.append(Case(name, title, group, fn, needs_raw))
         return fn
     return deco
 
@@ -195,7 +196,8 @@ def _(ctx: Context) -> None:
 
 
 # =========================================================================== calls: completed
-@case("call_echo_test", "a call to the echo extension is answered, carries RTP for 3 s and ends cleanly", "calls")
+@case("call_echo_test", "a call to the echo extension is answered, carries RTP for 3 s and ends cleanly", "calls",
+      needs_raw=True)
 def _(ctx: Context) -> None:
     r = ctx.sipp("invite_echo", service="600")
     expect_equal(finals(r), ["401 Unauthorized", "200 OK", "200 OK"], "answers (the last 200 is for the BYE)")
@@ -216,7 +218,7 @@ def _(ctx: Context) -> None:
 
 
 @case("call_phone_to_phone", "101 calls 102: the PBX rings the registered phone, bridges the call and relays the hang-up",
-      "calls")
+      "calls", needs_raw=True)
 def _(ctx: Context) -> None:
     with ctx.phone("102", "phone_answers", extra=["-rtp_echo"]) as phone:
         r = ctx.sipp("invite_echo", service="102")

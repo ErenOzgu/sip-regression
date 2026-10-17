@@ -9,7 +9,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from sipreg import malformed, pbx, pcap, report, suite, trace, ua
+from sipreg import malformed, pbx, pcap, report, sipp, suite, trace, ua
 
 ROOT = Path(__file__).resolve().parent.parent
 SCENARIOS = ROOT / "scenarios"
@@ -254,6 +254,16 @@ class Config(unittest.TestCase):
         self.assertEqual(pbx._hex_addr("0100007F"), "127.0.0.1")
         self.assertEqual(pbx._hex_addr("00000000"), "0.0.0.0")
         self.assertEqual(pbx._hex_addr("00000000000000000000000001000000"), "::1")
+
+
+class Capabilities(unittest.TestCase):
+    def test_a_missing_binary_cannot_play_audio_unless_root(self):
+        import os
+        self.assertEqual(sipp.can_play_pcap("no-such-sipp-binary"), os.geteuid() == 0)
+
+    def test_checks_that_play_audio_are_marked(self):
+        marked = {c.name for c in suite.CASES if c.needs_raw}
+        self.assertEqual(marked, {"call_echo_test", "call_phone_to_phone"})
 
 
 class SuiteShape(unittest.TestCase):

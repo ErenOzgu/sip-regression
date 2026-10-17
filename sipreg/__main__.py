@@ -21,6 +21,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--asterisk", default="asterisk", help="asterisk binary (default: asterisk)")
     ap.add_argument("--workdir", help="keep everything in this directory instead of a temporary one")
     ap.add_argument("--keep", action="store_true", help="do not delete the temporary directory")
+    ap.add_argument("--require-all", action="store_true", help="count a skipped check as a failure (use in CI)")
     args = ap.parse_args(argv)
 
     if args.list:
@@ -38,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
             f.write(rep.markdown(report))
     print(f"\n{report.count('passed')} passed, {report.count('failed')} failed, {report.count('error')} errors, "
           f"{report.count('skipped')} skipped in {report.seconds:.0f} s ({report.asterisk}, {report.sipp})")
+    if args.require_all and report.count("skipped"):
+        return 1
     return 0 if report.ok else 1
 
 

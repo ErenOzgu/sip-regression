@@ -48,12 +48,14 @@ jobs:
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq asterisk sip-tester python3
           # the packaged service starts on its own; the suite runs its own throw-away instance
           sudo systemctl stop asterisk || true
+          # SIPp plays audio through a raw socket; give it that one capability instead of running as root
+          sudo setcap cap_net_raw+ep "$(readlink -f "$(which sipp)")"
           asterisk -V
           sipp -v | head -1
       - name: Run the suite
         run: |
           mkdir -p results
-          hack/annotate.sh python3 -m sipreg --junit results/junit.xml --artifacts results/traces
+          hack/annotate.sh python3 -m sipreg --require-all --junit results/junit.xml --artifacts results/traces
       - name: Keep the traces
         if: always()
         uses: actions/upload-artifact@v4

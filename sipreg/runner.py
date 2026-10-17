@@ -10,6 +10,7 @@ import traceback
 from pathlib import Path
 
 from . import report as rep
+from . import sipp as sipp_mod
 from . import suite
 from .pbx import Pbx, PbxError
 
@@ -53,9 +54,18 @@ def run(only: list[str] | None, sip_port: int, binary: str, workdir: Path | None
         print(f"cannot start Asterisk: {e}", file=sys.stderr)
         raise SystemExit(2) from e
     ctx = suite.Context(pbx, work)
+    raw_ok = sipp_mod.can_play_pcap()
     try:
         for c in cases:
             res = rep.CaseResult(c.name, c.title, c.group)
+            if c.needs_raw and not raw_ok:
+                res.status = "skipped"
+                res.message = "SIPp cannot play audio here (needs a raw socket): " + sipp_mod.RAW_HINT
+                report.results.append(res)
+                if not quiet:
+                    print(rep.console_line(res), flush=True)
+                    print("      " + res.message, flush=True)
+                continue
             started = time.time()
             mark = pbx.log_mark()
             try:
