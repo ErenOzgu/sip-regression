@@ -174,6 +174,11 @@ tests/           unit tests that need neither Asterisk nor SIPp
 - [asterisk-gcp-iac](https://github.com/ErenOzgu/asterisk-gcp-iac): a hardened Asterisk on Google Cloud, built from code
 - [asterisk-exporter](https://github.com/ErenOzgu/asterisk-exporter): Prometheus metrics from the Asterisk Manager Interface
 
+## More
+
+[Design notes](docs/design-notes.md) (why it is built this way, how it was checked),
+[CHANGELOG](CHANGELOG.md) and [ROADMAP](ROADMAP.md).
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
