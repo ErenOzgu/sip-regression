@@ -10,6 +10,6 @@ meant to be a few hours of work, not a rewrite.
 - [ ] `call_over_tcp`: a call over the same transport
 - [ ] `max_contacts`: a second registration from the same endpoint replaces the first when `remove_existing` is set,
       and a mutant that lets contacts pile up
-- [ ] `--list --json`: the checks as JSON, for tools
+- [x] `--list --json`: the checks as JSON, for tools
 - [ ] A first release (`v0.1.0`) with a release workflow, like the other repositories have
 - [ ] SRTP, if the packaged Asterisk has `res_srtp`; otherwise say so in the limits

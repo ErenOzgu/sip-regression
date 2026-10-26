@@ -278,6 +278,29 @@ class SuiteShape(unittest.TestCase):
             self.assertTrue(c.title)
             self.assertIn(c.group, {"signalling", "calls", "media", "robustness", "posture", "health"})
 
+    def test_list_json_matches_the_registered_checks(self):
+        import contextlib
+        import io
+        import json
+
+        from sipreg import __main__ as cli
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            self.assertEqual(cli.main(["--list", "--json"]), 0)
+        data = json.loads(buf.getvalue())
+        self.assertEqual([d["name"] for d in data], [c.name for c in suite.CASES])
+        self.assertEqual({tuple(sorted(d)) for d in data}, {("group", "name", "needs_raw", "title")})
+        self.assertEqual([d["needs_raw"] for d in data], [c.needs_raw for c in suite.CASES])
+
+    def test_json_without_list_is_refused(self):
+        import contextlib
+        import io
+
+        from sipreg import __main__ as cli
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as e:
+            cli.main(["--json"])
+        self.assertEqual(e.exception.code, 2)
+
     def test_every_mutant_names_checks_that_exist(self):
         spec = importlib.util.spec_from_file_location("mutants", ROOT / "hack" / "mutants.py")
         mod = importlib.util.module_from_spec(spec)

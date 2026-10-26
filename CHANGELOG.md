@@ -5,6 +5,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## Unreleased
 
 ### Added
+- `--list --json`: the checks as a JSON array (`name`, `group`, `title`, `needs_raw`), for tools. `--json` without
+  `--list` is refused.
 - `docs/design-notes.md`: why the suite is built the way it is, how it was checked, and the questions this design
   usually draws.
 - `ROADMAP.md`: the next small steps, in order.

@@ -1,7 +1,8 @@
-"""python3 -m sipreg [--list] [--only NAME ...] [--junit FILE] [--summary FILE]"""
+"""python3 -m sipreg [--list [--json]] [--only NAME ...] [--junit FILE] [--summary FILE]"""
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -13,6 +14,7 @@ from . import runner, suite
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="sipreg", description="SIPp scenarios against a throw-away Asterisk.")
     ap.add_argument("--list", action="store_true", help="list the checks and exit")
+    ap.add_argument("--json", action="store_true", help="with --list: print the checks as a JSON array")
     ap.add_argument("--only", nargs="+", metavar="NAME", help="run just these checks")
     ap.add_argument("--junit", metavar="FILE", help="write a JUnit XML report")
     ap.add_argument("--summary", metavar="FILE", help="write a Markdown summary (default: $GITHUB_STEP_SUMMARY)")
@@ -24,6 +26,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--require-all", action="store_true", help="count a skipped check as a failure (use in CI)")
     args = ap.parse_args(argv)
 
+    if args.json and not args.list:
+        ap.error("--json only works together with --list")
+    if args.list and args.json:
+        print(json.dumps([{"name": c.name, "group": c.group, "title": c.title, "needs_raw": c.needs_raw}
+                          for c in suite.CASES], indent=2))
+        return 0
     if args.list:
         for c in suite.CASES:
             print(f"{c.name:<38} {c.group:<11} {c.title}")

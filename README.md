@@ -16,7 +16,7 @@ The test PBX configuration is in [`pbx/`](pbx/) and is deliberately small. Point
 
 ## What it checks
 
-22 checks, about 45 seconds. `python3 -m sipreg --list` prints them.
+22 checks, about 45 seconds. `python3 -m sipreg --list` prints them; add `--json` for a JSON array of `name`, `group`, `title` and `needs_raw`.
 
 | Group | Check | What it proves |
 |---|---|---|
